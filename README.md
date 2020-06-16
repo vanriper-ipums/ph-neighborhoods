@@ -8,5 +8,5 @@ during AY2019-20.
 - [] Map of cities in dataset - appendix?
 - [] Illustrative example of scanned ED map showing ED of PH project and neighboring EDs
 - [] Neighborhood population (for each project) - total pop, white/black - appendix?
-- [] Public housing project population count and HH count - appendix?
-- [] Median HH income plots (by race or region)
+- [] Public housing project population count and HH count - appendix? working on this now
+- [X] Median HH income plots (by race or region)
