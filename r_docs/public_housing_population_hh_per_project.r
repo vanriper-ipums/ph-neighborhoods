@@ -46,10 +46,8 @@ for(i in var_list){
   
   # Households by race by ph_merge status
   y <- df %>%
-#    filter(pernum==1)%>%
     filter((!!sym(i)) == 1) %>%
     group_by(ph_merge) %>%
-#    group_by(ph_merge, race1) %>%
 # select distinct serials to handle the fragments - this will change some HH counts but not by much
     distinct(serial) %>%
     summarise(hh = n()) %>%
