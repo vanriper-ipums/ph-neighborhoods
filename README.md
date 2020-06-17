@@ -12,4 +12,5 @@ during AY2019-20.
 - [] Inspect the public housing household counts to make sure they match prior counts (I'm worried about the serial issues)
   - 15 developments have a count difference between 2019 PAA abstract and v8 dataset, often off by 1 or two households
   - HH count differences due to some individuals being re-classed as "fragment" in a PH household, but they were actually part of the PH household. These individuals get a pernum==1 in the data, even though they didn't in the past. When I filter by pernum==1, I get that extra "HH" from the fragment. I could change the code to work with unique serial? 
+  - Changing to distinct(serial) leaves me with 3 of the 15 developments that have mismatches (Lakeview, Red Hook, and Queensbridge). But, I think I've added in mismatches now because of the change.
 - [X] Median HH income plots (by race or region)
