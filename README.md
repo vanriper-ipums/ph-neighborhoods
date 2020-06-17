@@ -7,7 +7,7 @@ during AY2019-20.
 ## TODO list
 - [] Map of cities in dataset - appendix?
 - [] Illustrative example of scanned ED map showing ED of PH project and neighboring EDs
-- [] Neighborhood population (for each project) - total pop, white/black - appendix?
-- [] Public housing project population count and HH count - appendix? working on this now
+- [X] Neighborhood population (for each project) - total pop, white/black - appendix?
+- [X] Public housing project population count and HH count - appendix? working on this now
 - [] Inspect the public housing household counts to make sure they match prior counts (I'm worried about the serial issues)
 - [X] Median HH income plots (by race or region)
