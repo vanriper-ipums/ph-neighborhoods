@@ -15,5 +15,7 @@ during AY2019-20.
   - HH count differences due to some individuals being re-classed as "fragment" in a PH household, but they were actually part of the PH household. These individuals get a pernum==1 in the data, even though they didn't in the past. When I filter by pernum==1, I get that extra "HH" from the fragment. I could change the code to work with unique serial? 
   - Changing to distinct(serial) and removing race1 from the group_by give me good HH counts (counts that match the PAA 2019 abstract)
   - But, there are still some oddities in the PH data (Jordan - same serial with multiple pernum == 1, which is okay for median income because all people with same serial get same household income); Newtowne - different serials for definitely the same household, but even the original data we used for flagging had different serials) - not okay for median income because one of the records has a unique serial with a pernum of 2 and an hhincome of 1250 
+  - 5 records have serial_ct == 1 & pernum != to 1, and only one record (Newtown) has HH income
+  - 20 records (9 hhs) have single serial number with multiple pernum == 1 values - all serials have same hhincome, so that is fine 
   
 - [X] Median HH income plots (by race or region)
