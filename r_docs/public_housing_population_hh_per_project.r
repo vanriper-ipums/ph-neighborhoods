@@ -39,6 +39,7 @@ for(i in var_list){
   # Person by race by ph_merge status 
   z <- df %>%
     filter((!!sym(i)) == 1) %>%
+#    group_by(ph_merge) %>%
     group_by(ph_merge, race1) %>%
     summarise(persons = n()) %>%
     mutate(dev = i)
@@ -47,7 +48,8 @@ for(i in var_list){
   y <- df %>%
 #    filter(pernum==1)%>%
     filter((!!sym(i)) == 1) %>%
-    group_by(ph_merge, race1) %>%
+    group_by(ph_merge) %>%
+#    group_by(ph_merge, race1) %>%
 # select distinct serials to handle the fragments - this will change some HH counts but not by much
     distinct(serial) %>%
     summarise(hh = n()) %>%
@@ -60,4 +62,51 @@ for(i in var_list){
   hh_by_dev <- bind_rows(hh_by_dev, y)
 }
 
+#### parking lot ####
+serial_total <- hh_by_dev %>%
+  filter(ph_merge == 3) %>%
+  group_by(dev) %>%
+  summarise(hh_serial = sum(hh))
 
+pernum_total <- pernum_hh_by_dev %>%
+  filter(ph_merge == 3) %>%
+  group_by(dev) %>%
+  summarise(hh_pernum = sum(hh))
+
+total_hh <- left_join(serial_total, pernum_total, by = "dev")
+
+
+newtowne_hp <- df %>% filter(ph_merge == 3 & newtowne == 1)
+
+newtown_hp_pernum1 <- newtowne_hp %>%
+  filter(pernum == 1) %>%
+  select(serial, serial_masterfile, pernum, histid, histid_upd)
+
+newtown_hp_serial <- newtowne_hp %>%
+  distinct(serial)
+#  filter(pernum == 1) %>%
+#  select(serial, serial_masterfile, pernum, histid, histid_upd)
+#  
+newtown_hp_fulljoin <- full_join(newtown_hp_pernum1, newtown_hp_serial, by="serial")
+
+ph <- df %>%
+  filter(ph_merge == 3)
+
+ph <- ph %>%
+  group_by(serial) %>%
+  mutate(serial_ct = n())
+
+ph_subset_serial_ct_notequal_pernum <- ph %>%
+  filter(serial_ct == 1 & pernum != 1)
+
+ph_subset_multiple_pernum1 <- ph %>%
+  filter(pernum == 1) %>%
+  group_by(serial) %>%
+  mutate(serial_ct2 = n()) %>%
+  filter(serial_ct2 > 1)
+
+ph_subset_newtowne <- ph_subset %>%
+  filter(newtowne == 1)
+
+ph_subset_jordan <- ph_subset %>%
+  filter(jordan == 1)
