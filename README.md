@@ -10,4 +10,6 @@ during AY2019-20.
 - [X] Neighborhood population (for each project) - total pop, white/black - appendix?
 - [X] Public housing project population count and HH count - appendix? working on this now
 - [] Inspect the public housing household counts to make sure they match prior counts (I'm worried about the serial issues)
+  - 15 developments have a count difference between 2019 PAA abstract and v8 dataset, often off by 1 or two households
+  - HH count differences due to some individuals being re-classed as "fragment" in a PH household, but they were actually part of the PH household. These individuals get a pernum==1 in the data, even though they didn't in the past. When I filter by pernum==1, I get that extra "HH" from the fragment. I could change the code to work with unique serial? 
 - [X] Median HH income plots (by race or region)
