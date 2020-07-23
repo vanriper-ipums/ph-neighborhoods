@@ -5,6 +5,23 @@ based on work done during the 2019 MPC Summer Diversity Fellowship and subsequen
 during AY2019-20.
 
 ## TODO list
+- [ ] Verify the EDs in Atl, Mpls, Manhattan, and Philly relative to PH ed and neighborhood defn
+      - [X] dissolve block shapes on aggr-id
+      - [X] find the PH point shapefile
+      - [X] overlay PH points with EDs
+      - [ ] compare Logan EDs with scanned map and our FINAL dataset
+        - [X] Mpls Sumner Homes
+        - [X] Atl University Homes
+        - [ ] Atl Techwood Homes 
+            * 115, 112, and 113 are on map, in ED, and in list but not in FINAL dataset
+            * 115, 112, and 113 are in Logan's GRF for Atl
+        - [X] Phil Hill Creek - we have 1723 because of possible corner touch; Logan has it separated
+        - [X] Manhattan Harlem Rivers 
+            * we have 1907 and 1937 because of possible corner touches; Logan has it separated
+            * Logan and list have 1951 but it's not in FINAL dataset
+            * ED 1951 has no population in 1940 (not in GRF)
+        - [ ] Manhattan First Houses
+            * Logan's EDs look very, very, very different from the scanned map
 - [ ] Map of cities in dataset - appendix?
 - [ ] Illustrative example of scanned ED map showing ED of PH project and neighboring EDs
 - [X] Neighborhood population (for each project) - total pop, white/black - appendix?
