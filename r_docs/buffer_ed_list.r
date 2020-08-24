@@ -3,7 +3,10 @@
 # Created: 2020-08-24
 # 
 # This script generates buffers around public housing devs and identifies EDs that intersect with 
-# the buffer.
+# the buffer. It uses the public housing development point shapefile created by David Van Riper and
+# the 1940 ED shapefiles created by the Urban Transition Historical GIS project at Brown Uniersity. 
+# 
+# Documentation about the 1940 ED shapefiles can be found at https://s4.ad.brown.edu/Projects/UTP2/citymaps.htm
 
 require(tidyverse)
 require(sf)
