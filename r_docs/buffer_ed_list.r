@@ -18,44 +18,65 @@ half_mile <- 804.672
 
 #### Read in PH development point shapefile ####
 dev <- read_sf("data/shps/developments/ph_site_developments_albers.shp")
-#ed_bham <- read_sf("data/shps/BirminghamAL_1940_EDmap.shp")
 
-#### Generate list of city shapefiles #### 
+#### Buffer the dev shapefile #### 
+q_mile_dev <- dev %>%
+  st_buffer(dist = quarter_mile)
+
+h_mile_dev <- dev %>%
+  st_buffer(dist = half_mile)
+
+#### Generate list of city ED shapefiles #### 
 file_list <- list.files(file_path, pattern = "?.shp")
 
 #### Loop over file list ####
 for(i in file_list){
   if(!str_detect(i, "xml")){
     j <- str_split(i, "_")
+    
+    # Read in city-specific ED shapefile
     x <- read_sf(paste0(file_path, i))
     
+    # Dissolve city-specific shapefile to create ED polygons
+    # Add a city name to sf
     x <- x %>%
       group_by(ED_num) %>%
       summarise(blk_count = n()) %>%
       mutate(city = j[[1]][1])
     
     # identify EDs that touch a quarter mile buffer around an development
-    q_mile <- dev %>%
-      st_buffer(dist = quarter_mile) %>%
-      st_join(x) %>%
-      filter(!is.na(ED_num))
+    # q_mile <- dev %>%
+    #   st_buffer(dist = quarter_mile) %>%
+    #   st_join(x) %>%
+    #   filter(!is.na(ED_num))
     
+    # Join quarter mile buffer onto ED shapes and retains all EDs with a value for site_name
+    q_mile_ed <- x %>%
+      st_join(q_mile_dev) %>%
+      filter(!is.na(site_name))
+
+    # Join half mile buffer onto ED shapes and retains all EDs with a value for site_name
+    h_mile_ed <- x %>%
+      st_join(h_mile_dev) %>%
+      filter(!is.na(site_name))    
+
     # identify EDs that touch a half mile buffer around an development
-    h_mile <- dev %>%
-      st_buffer(dist = half_mile) %>%
-      st_join(x) %>%
-      filter(!is.na(ED_num))
+    # h_mile <- dev %>%
+    #   st_buffer(dist = half_mile) %>%
+    #   st_join(x) %>%
+    #   filter(!is.na(ED_num))
     
+    # identify EDs that touch a quarter mile buffer around an development
     if(exists("q_mile_final")){
-      q_mile_final <- rbind(q_mile_final, q_mile)
+      q_mile_final <- rbind(q_mile_final, q_mile_ed)
     }else{
-      q_mile_final <- q_mile 
+      q_mile_final <- q_mile_ed
     }
     
     if(exists("h_mile_final")){
-      h_mile_final <- rbind(h_mile_final, h_mile)
+      h_mile_final <- rbind(h_mile_final, h_mile_ed)
     }else{
-      h_mile_final <- h_mile 
+      h_mile_final <- h_mile_ed
     }
   }
 }
