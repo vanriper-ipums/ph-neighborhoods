@@ -11,7 +11,8 @@
 # Problems:
 # 1. GRF ED codes use upper case letters, and shapefiles use lower case letters
 # 2. Birmingham - GRF has a 7a and 7b but the shapefile just has a 7
-# 
+# 3. Boston - GRF and first_order_ed missing 277 but it's in shapefile (probably has no people)
+# 4. Oklahoma City - many EDs are undefined in OKC shapefile, but they are in first_order_ed and GRF 
 
 require(tidyverse)
 #require(haven)
