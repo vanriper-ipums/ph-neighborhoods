@@ -13,6 +13,7 @@ require(sf)
 
 #### Constants #### 
 file_path <- "data/shps/ed/"
+# the 1/4 and 1/2 mile buffers are in meters
 quarter_mile <- 402.336
 half_mile <- 804.672
 
