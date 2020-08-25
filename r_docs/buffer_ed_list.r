@@ -29,7 +29,7 @@ h_mile_dev <- dev %>%
 #### Generate list of city ED shapefiles #### 
 file_list <- list.files(file_path, pattern = "?.shp")
 
-#### Loop over file list ####
+#### Loop over file list, finding the EDs the touch the quarter and half mile buffers ####
 for(i in file_list){
   if(!str_detect(i, "xml")){
     j <- str_split(i, "_")
@@ -44,12 +44,6 @@ for(i in file_list){
       summarise(blk_count = n()) %>%
       mutate(city = j[[1]][1])
     
-    # identify EDs that touch a quarter mile buffer around an development
-    # q_mile <- dev %>%
-    #   st_buffer(dist = quarter_mile) %>%
-    #   st_join(x) %>%
-    #   filter(!is.na(ED_num))
-    
     # Join quarter mile buffer onto ED shapes and retains all EDs with a value for site_name
     q_mile_ed <- x %>%
       st_join(q_mile_dev) %>%
@@ -60,19 +54,14 @@ for(i in file_list){
       st_join(h_mile_dev) %>%
       filter(!is.na(site_name))    
 
-    # identify EDs that touch a half mile buffer around an development
-    # h_mile <- dev %>%
-    #   st_buffer(dist = half_mile) %>%
-    #   st_join(x) %>%
-    #   filter(!is.na(ED_num))
-    
-    # identify EDs that touch a quarter mile buffer around an development
+    # bind together the quarter mile EDs for a given development
     if(exists("q_mile_final")){
       q_mile_final <- rbind(q_mile_final, q_mile_ed)
     }else{
       q_mile_final <- q_mile_ed
     }
     
+    # bind together the half mile EDs for a given development
     if(exists("h_mile_final")){
       h_mile_final <- rbind(h_mile_final, h_mile_ed)
     }else{
