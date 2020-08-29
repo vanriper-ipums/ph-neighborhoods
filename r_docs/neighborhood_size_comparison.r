@@ -69,3 +69,13 @@ half_mile <- half_mile %>%
 #### Create first_order neighborhood total #### 
 first_order <- first_order %>%
   mutate(first_order_total = ph_1 + ph_3)
+
+#### Create quarter_mile neighborhood total #### 
+quarter_mile_nhood_total <- quarter_mile %>%
+  group_by(city, site_name) %>%
+  summarise(quarter_mile_total = sum(freq, na.rm = TRUE))
+
+#### Create half_mile neighborhood total ####
+half_mile_nhood_total <- half_mile %>%
+  group_by(city, site_name) %>%
+  summarise(half_mile_total = sum(freq, na.rm = TRUE))
