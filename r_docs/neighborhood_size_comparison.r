@@ -20,19 +20,21 @@ require(tidyverse)
 #### Constants #### 
 grf_ed_path <- "data/grf_ed_freqs/"
 ed_buffer_path <- "data/ed_lists/"
+data_path <- "data/"
 
 # file names
 quarter_mile_file <- "quarter_mile_eds.csv"
 half_mile_file <- "half_mile_eds.csv"
-first_order_file <- "data/ph_devshorthand_freqs_20200824_v9.csv"
+first_order_file <- "data/ph_devshorthand_freqs_20200829_v9.csv"
 first_order_ed_file <- "data/ph_ed_freqs_20200818_v9.csv"
+dev_development_xwalk_file <- "dev_development_xwalk.csv"
 
 #### Load files #### 
 quarter_mile <- read_csv(paste0(ed_buffer_path, quarter_mile_file))
 half_mile <- read_csv(paste0(ed_buffer_path, half_mile_file))
 first_order <- read_csv(first_order_file)
 first_order_ed <- read_csv(first_order_ed_file)
-
+dev_development_xwalk <- read_csv(paste0(data_path, dev_development_xwalk_file))
 
 # GRF ED files
 file_list <- list.files(grf_ed_path, pattern = "^ed")
@@ -79,3 +81,9 @@ quarter_mile_nhood_total <- quarter_mile %>%
 half_mile_nhood_total <- half_mile %>%
   group_by(city, site_name) %>%
   summarise(half_mile_total = sum(freq, na.rm = TRUE))
+
+#### Get first_order_total, quarter_mile_total, and half_mile_total onto one df #### 
+nhood_totals <- first_order %>%
+  left_join(dev_development_xwalk, by = c("dev" = "dev_names")) %>%
+  left_join(quarter_mile_nhood_total, by = "site_name") %>%
+  left_join(half_mile_nhood_total, by = "site_name")
