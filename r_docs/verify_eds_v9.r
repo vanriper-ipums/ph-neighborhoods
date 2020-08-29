@@ -11,12 +11,15 @@
 require(tidyverse)
 require(readxl)
 require(haven)
+require(sf)
 
 #### File paths ####
 # ED csv path 
 path_ed_csv <- "/pkg/ancestryprojects/immigrant_public_housing/neighborhood/Cori/"
 # Analytical dataset path 
 path_dataset <- "/pkg/ancestryprojects/immigrant_public_housing/neighborhood/Catalina/A-NewData/"
+# Development shapefile path 
+path_shape <- "data/shps/developments/"
 
 #### Read in ED CSVs ####
 no_dups_ipums <- read_xlsx(paste0(path_ed_csv, "NoDupsIPUMS.xlsx"))
@@ -24,6 +27,13 @@ no_dups_orig <- read_xlsx(paste0(path_ed_csv, "NoDupsOrig.xlsx"))
 
 #### Read in analytical DTA ####
 v9 <- read_dta(paste0(path_dataset, "FINAL_DATA_V9.dta"))
+
+#### Read in development shapefile #### 
+dev_shp <- read_sf(paste0(path_shape, "ph_site_developments_albers.shp"))
+
+#### Drop geometry from dev_shp #### 
+dev_shp <- dev_shp %>%
+  st_drop_geometry()
 
 #### Drop extraneous fields from dfs #### 
 no_dups_ipums <- no_dups_ipums %>%
@@ -129,7 +139,8 @@ df <- data.frame(
                  dev = as.character(),
                  development = as.character(),
                  ph_merge = as.numeric(),
-                 freq = as.numeric(), stringsAsFactors = FALSE)
+                 freq = as.numeric(), 
+                 stringsAsFactors = FALSE)
 
 # loop over vars in dev_names, computing freqs by enum_dist and ph_merge, and storing results in df
 for(i in dev_names){
@@ -142,10 +153,47 @@ for(i in dev_names){
   df <- bind_rows(df, x)
 }
 
+# create dev summaries from df 
+dev_sum <- df %>%
+  group_by(dev, ph_merge) %>%
+  summarise(freq = sum(freq))
+  
+
 # create a wide version of df 
-df_wide <- df %>%
-  pivot_wider(id_cols = dev:ph_merge, names_from = ph_merge, values_from = freq, names_prefix = "ph_") %>%
-  filter(development != "")
+dev_sum_wide <- dev_sum %>%
+  pivot_wider(id_cols = dev:ph_merge, names_from = ph_merge, values_from = freq, names_prefix = "ph_")
 
 # write out ED list to CSV
-write_csv(df_wide, "data/ph_devshorthand_freqs_20200824_v9.csv")
+write_csv(dev_sum_wide, "data/ph_devshorthand_freqs_20200829_v9.csv")
+
+#### Create a dev to development crosswalk #### 
+# Convert dev_names to data.frame 
+dev <- data.frame(dev_names, stringsAsFactors = FALSE)
+
+# Sort by alpha order 
+dev <- dev %>%
+  arrange(dev_names)
+
+# Add an index value to dev
+dev$ID <- seq.int(nrow(dev))
+
+# Extract site_name from dev_shp and arrange in alpha order
+dev_shp <- dev_shp %>%
+  select(-ph_site_id, -msa_str, -y, -x) %>%
+  arrange(site_name)
+
+# Add an index value to dev_shp
+dev_shp$ID <- seq.int(nrow(dev_shp))
+
+# Write dev_shp out to file
+write_csv(dev_shp, "data/site_name_id.csv")
+
+# Read in corrected site_name_id.csv 
+dev_shp_correct <- read_csv("data/site_name_id.csv")
+
+# Join dev_shp_correct onto dev by ID
+dev_development <- dev %>%
+  left_join(dev_shp_correct, by = "ID")
+
+# Write out dev_development crosswalk
+write_csv(dev_development, "data/dev_development_xwalk.csv") 
