@@ -63,7 +63,8 @@ grf_ed_freq <- grf_ed_freq %>%
 
 #### Join grf_ed_freq to half and quarter mile files #### 
 quarter_mile <- quarter_mile %>%
-  left_join(grf_ed_freq, by = c("city" = "B_city", "ED_num" = "ed"))
+  left_join(grf_ed_freq, by = c("city" = "B_city", "ED_num" = "ed")) %>%
+  select(-B_ed, -x, -y)
 
 half_mile <- half_mile %>%
   left_join(grf_ed_freq, by = c("city" = "B_city", "ED_num" = "ed"))
@@ -71,6 +72,17 @@ half_mile <- half_mile %>%
 #### Create first_order neighborhood total #### 
 first_order <- first_order %>%
   mutate(first_order_total = ph_1 + ph_3)
+
+#### Create first_order_ed total #### 
+first_order_ed <- first_order_ed %>%
+  mutate(ph_1 = case_when(is.na(ph_1) ~ 0,
+                          TRUE ~ ph_1)) %>%
+  mutate(ph_3 = case_when(is.na(ph_3) ~ 0,
+                          TRUE ~ ph_3)) %>%
+  mutate(first_order_total = ph_1 + ph_3) %>%
+  left_join(dev_development_xwalk, by = c("dev" = "dev_names")) %>%
+  select(-ID)
+  
 
 #### Create quarter_mile neighborhood total #### 
 quarter_mile_nhood_total <- quarter_mile %>%
@@ -86,4 +98,10 @@ half_mile_nhood_total <- half_mile %>%
 nhood_totals <- first_order %>%
   left_join(dev_development_xwalk, by = c("dev" = "dev_names")) %>%
   left_join(quarter_mile_nhood_total, by = "site_name") %>%
-  left_join(half_mile_nhood_total, by = "site_name")
+  left_join(half_mile_nhood_total, by = "site_name") %>%
+  select(-city.x, -city.y, -ID) %>%
+  select(dev, site_name, ph_1, ph_3, first_order_total, quarter_mile_total, half_mile_total)
+
+#### Write out the quarter mile and first order CSVs #### 
+write_csv(quarter_mile, "data/ed_lists/quarter_mile_eds.csv")
+write_csv(first_order_ed, "data/ed_lists/first_order_eds.csv")
