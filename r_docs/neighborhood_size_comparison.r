@@ -103,5 +103,5 @@ nhood_totals <- first_order %>%
   select(dev, site_name, ph_1, ph_3, first_order_total, quarter_mile_total, half_mile_total)
 
 #### Write out the quarter mile and first order CSVs #### 
-write_csv(quarter_mile, "data/ed_lists/quarter_mile_eds.csv")
+write_csv(quarter_mile, "data/ed_lists/quarter_mile_eds_freqs.csv")
 write_csv(first_order_ed, "data/ed_lists/first_order_eds.csv")
