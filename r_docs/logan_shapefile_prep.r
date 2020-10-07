@@ -180,4 +180,4 @@ st_write(dev_half_interect_50percent_1930, paste0(path30, "half_mile_50percent_e
 st_write(q_mile_ed_1940, paste0(path40, "quarter_mile_eds_1940.shp"), update = TRUE)
 st_write(h_mile_ed_1940, paste0(path40, "half_mile_eds_1940.shp"), update = TRUE)
 st_write(q_mile_ed_1930, paste0(path30, "quarter_mile_eds_1930.shp"), update = TRUE)
-st_write(h_mile_ed_1940, paste0(path30, "half_mile_eds_1930.shp"), update = TRUE)
+st_write(h_mile_ed_1930, paste0(path30, "half_mile_eds_1930.shp"), update = TRUE)
