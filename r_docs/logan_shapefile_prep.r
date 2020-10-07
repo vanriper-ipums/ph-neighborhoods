@@ -37,6 +37,13 @@ for(i in files40){
     # Read in city-specific ED shapefile
     x <- read_sf(paste0(path40, i))
     
+    # Dissolve by ed 
+    x <- x %>%
+      group_by(ed) %>%
+      summarise(totalpop = max(totalpop),
+                wpop = max(wpop),
+                bpop = max(bpop))
+    
     # Add city name to each ED 
     x <- x %>%
       mutate(city_name = j[[1]][1])
@@ -58,6 +65,12 @@ for(i in files30){
   # Read in city-specific ED shapefile
   x <- read_sf(paste0(path30, i))
   
+  # Dissolve by ed 
+  x <- x %>%
+    group_by(ed) %>%
+    summarise(totalpop = max(totalpop),
+              wpop = max(wpop),
+              bpop = max(bpop))
   # Add city name to each ED 
   x <- x %>%
     mutate(city_name = j[[1]][1])
@@ -159,7 +172,12 @@ dev_half_interect_50percent_1930 <- dev_half_intersect_1930 %>%
   filter(p_over_n >= 50.0)
 
 #### Write out sfs to shps #### 
-st_write(dev_quarter_interect_25percent_1940, paste0(path40, "quarter_mile_25percent_eds_1940.shp"))
-st_write(dev_half_interect_50percent_1940, paste0(path40, "half_mile_50percent_eds_1940.shp"))
-st_write(dev_quarter_interect_25percent_1930, paste0(path30, "quarter_mile_25percent_eds_1930.shp"))
-st_write(dev_half_interect_50percent_1930, paste0(path30, "half_mile_50percent_eds_1930.shp"))
+st_write(dev_quarter_interect_25percent_1940, paste0(path40, "quarter_mile_25percent_eds_1940.shp"), update = TRUE)
+st_write(dev_half_interect_50percent_1940, paste0(path40, "half_mile_50percent_eds_1940.shp"), update = TRUE)
+st_write(dev_quarter_interect_25percent_1930, paste0(path30, "quarter_mile_25percent_eds_1930.shp"), update = TRUE)
+st_write(dev_half_interect_50percent_1930, paste0(path30, "half_mile_50percent_eds_1930.shp"), update = TRUE)
+
+st_write(q_mile_ed_1940, paste0(path40, "quarter_mile_eds_1940.shp"), update = TRUE)
+st_write(h_mile_ed_1940, paste0(path40, "half_mile_eds_1940.shp"), update = TRUE)
+st_write(q_mile_ed_1930, paste0(path30, "quarter_mile_eds_1930.shp"), update = TRUE)
+st_write(h_mile_ed_1940, paste0(path30, "half_mile_eds_1930.shp"), update = TRUE)
